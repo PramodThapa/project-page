@@ -104,15 +104,6 @@ class AddOnDialog extends LitElement {
     this.dialogPosition = {};
   }
 
-  updated() {
-    // console.log(this.dialogPosition);
-    // if (!isStringEmpty(this.projectID)) {
-    //   let paperDialog = this.shadowRoot.getElementById(`${this.projectID}`);
-    //   paperDialog.style.position = 'absolute';
-    //   paperDialog.style.top = `${this.dialogPosition.yPosition}px`;
-    //   paperDialog.style.left = `${this.dialogPosition.xPosition}px`;
-    // }
-  }
   /**
    * Renders the component.
    *

@@ -260,7 +260,9 @@ class MyApp extends LitElement {
     let paperDialog = this.shadowRoot.getElementById('add-on-dialog');
     paperDialog.style.position = 'absolute';
     paperDialog.style.top = `${this.dialogPosition.yPosition + this.offsetY}px`;
-    paperDialog.style.left =`${this.dialogPosition.xPosition - this.offsetX}px`;
+    paperDialog.style.left = `${
+      this.dialogPosition.xPosition - this.offsetX
+    }px`;
   }
 
   openAddOnDialog() {
