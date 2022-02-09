@@ -160,6 +160,8 @@ class MyApp extends LitElement {
   constructor() {
     super();
 
+    this.offsetX = 120;
+    this.offsetY = 20;
     this.projectID = '';
     this.searchText = '';
     this.projectData = {};
@@ -254,6 +256,11 @@ class MyApp extends LitElement {
       xPosition: position.xPosition,
       yPosition: position.yPosition,
     };
+
+    let paperDialog = this.shadowRoot.getElementById('add-on-dialog');
+    paperDialog.style.position = 'absolute';
+    paperDialog.style.top = `${this.dialogPosition.yPosition + this.offsetY}px`;
+    paperDialog.style.left =`${this.dialogPosition.xPosition - this.offsetX}px`;
   }
 
   openAddOnDialog() {
@@ -275,17 +282,16 @@ class MyApp extends LitElement {
   render() {
     return html`
       <div class="wrapper">
+        <add-on-dialog
+          id="add-on-dialog"
+          .projectID=${this.projectID}
+          .opened=${this.addOnDialogOpened}
+          .dialogPosition=${this.dialogPosition}
+          .handleCloseDialog=${this.openAddOnDialog}
+          .handleEditButton=${this.handleOpenAddDialog}
+          .handleDeleteButton=${() => this.deleteProject(this.projectID)}
+        ></add-on-dialog>
         <div class="container">
-          <add-on-dialog
-            id="add-on-dialog"
-            .projectID=${this.projectID}
-            .opened=${this.addOnDialogOpened}
-            .dialogPosition=${this.dialogPosition}
-            .handleCloseDialog=${this.openAddOnDialog}
-            .handleEditButton=${this.handleOpenAddDialog}
-            .handleDeleteButton=${() => this.deleteProject(this.projectID)}
-          ></add-on-dialog>
-
           <div class="nav clearfix">
             <div class="nav-container ">
               <h4 class="logo-text float-l">Project</h4>

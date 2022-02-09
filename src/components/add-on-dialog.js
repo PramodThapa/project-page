@@ -21,6 +21,7 @@ class AddOnDialog extends LitElement {
         }
         paper-dialog {
           max-width: 150px;
+          position: relative;
         }
         paper-button {
           padding: 5px;
@@ -104,13 +105,13 @@ class AddOnDialog extends LitElement {
   }
 
   updated() {
-    console.log(this.dialogPosition);
-    if (!isStringEmpty(this.projectID)) {
-      let paperDialog = this.shadowRoot.getElementById(`${this.projectID}`);
-      paperDialog.style.position = 'absolute';
-      paperDialog.style.top = `${this.dialogPosition.yPosition}px`;
-      paperDialog.style.left = `${this.dialogPosition.xPosition}px`;
-    }
+    // console.log(this.dialogPosition);
+    // if (!isStringEmpty(this.projectID)) {
+    //   let paperDialog = this.shadowRoot.getElementById(`${this.projectID}`);
+    //   paperDialog.style.position = 'absolute';
+    //   paperDialog.style.top = `${this.dialogPosition.yPosition}px`;
+    //   paperDialog.style.left = `${this.dialogPosition.xPosition}px`;
+    // }
   }
   /**
    * Renders the component.
@@ -118,7 +119,6 @@ class AddOnDialog extends LitElement {
    * @returns {HTMLElement}
    */
   render() {
-    console.log(this.dialogPosition);
     return html`
       <paper-dialog id=${this.projectID} .opened=${this.opened}>
         <div>
