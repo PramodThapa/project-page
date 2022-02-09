@@ -6,16 +6,12 @@ import {
   getProject,
 } from './services/project-data.js';
 
-import './components/project-filter.js';
-import './components/project-card.js';
 import './components/add-project.js';
+import './components/project-card.js';
+import './components/project-filter.js';
+import '@polymer/paper-fab/paper-fab.js';
 import './components/commons/confirm-dialog.js';
 
-import '@polymer/paper-fab/paper-fab.js';
-
-/**
- * Your description here..
- */
 class MyApp extends LitElement {
   /**
    * The styles for the component.
@@ -42,6 +38,9 @@ class MyApp extends LitElement {
           content: '';
           clear: both;
           display: table;
+        }
+        .container {
+          position: relative;
         }
         .nav {
           width: 100%;
@@ -87,10 +86,70 @@ class MyApp extends LitElement {
    */
   static get properties() {
     return {
+      /**
+       * List of Project
+       *
+       * @type {Array}
+       */
       project: { type: Array },
+
+      /**
+       * Mode on with form is opened.
+       *
+       * If true form is opened in edit mode to edit respective project with project ID.
+       *
+       * @type {String}
+       */
+      editMode: { type: String },
+
+      /**
+       * Project ID of the selected project
+       *
+       * @type {String}
+       */
+      projectID: { type: String },
+
+      /**
+       * Search text from paper-input
+       *
+       * @type {String}
+       */
       searchText: { type: String },
+
+      /**
+       * Project data of projct with respective project ID
+       *
+       * @type {Object}
+       */
+      projectData: { type: Object },
+
+      /**
+       * Function that opens/close the form to edit/add project.
+       *
+       * @type {String}
+       */
+      openAddDialog: { type: Function },
+
+      /**
+       * Dialog position for add-on component open.
+       *
+       * @type {Object}
+       */
+      dialogPosition: { type: Object },
+
+      /**
+       * Filtered Project
+       *
+       * @type {Array}
+       */
       filteredProject: { type: Array },
-      openAddDialog: { type: String },
+
+      /**
+       * True if form is opened
+       *
+       * @type {Array}
+       */
+      addOnDialogOpened: { type: String },
     };
   }
 
@@ -101,13 +160,21 @@ class MyApp extends LitElement {
   constructor() {
     super();
 
+    this.projectID = '';
     this.searchText = '';
+    this.projectData = {};
+    this.editMode = false;
+    this.dialogPosition = {};
     this.openAddDialog = false;
+    this.addOnDialogOpened = false;
 
-    this.handleOpenAddDialog = this.handleOpenAddDialog.bind(this);
-    this.onSearchTextChange = this.onSearchTextChange.bind(this);
     this.addProject = this.addProject.bind(this);
+    this.setProjectId = this.setProjectId.bind(this);
     this.deleteProject = this.deleteProject.bind(this);
+    this.openAddOnDialog = this.openAddOnDialog.bind(this);
+    this.setDialogPosition = this.setDialogPosition.bind(this);
+    this.onSearchTextChange = this.onSearchTextChange.bind(this);
+    this.handleOpenAddDialog = this.handleOpenAddDialog.bind(this);
   }
 
   connectedCallback() {
@@ -117,54 +184,108 @@ class MyApp extends LitElement {
     this.filteredProject = this.project;
   }
 
+  /**
+   * Function to update filter project on search text is changed in project-filter component.
+   *
+   * @param {*} e || event
+   */
   onSearchTextChange(e) {
-    let filterProject = [];
     this.searchText = e.target.value.toLowerCase();
-    this.project.map((project) => {
+    this.filteredProject = this.project.filter((project) => {
       if (project.name.toLowerCase().startsWith(this.searchText)) {
-        filterProject.push(project);
+        return project;
       }
     });
-
-    this.filteredProject = [...filterProject];
-
-    // this.searchText= e.target.value.toLowerCase();
-    // this.filteredProject = this.project.map((project)=>{
-    //   console.log(project.name.toLowerCase().startsWith(this.searchText))
-    //   if(project.name.toLowerCase().startsWith(this.searchText)){
-    //     console.log(project)
-    //     return project
-    //   }
-    // })
-    // console.log(this.filteredProject)
   }
 
+  /**
+   * Function to add project
+   *
+   * @param {*} project || form data as object
+   */
   addProject(project) {
     this.project = [...this.project, project];
     this.filteredProject = this.project;
-    console.log(this.project);
   }
 
+  /**
+   * Function to delete project with respective projectID
+   *
+   * @param {*} projectID || project ID of project
+   */
   deleteProject(projectID) {
     this.project = this.project.filter((project) => projectID != project.id);
     this.filteredProject = this.project;
-    console.log(this.filteredProject);
+    this.addOnDialogOpened = false;
   }
 
-  handleOpenAddDialog() {
+  /**
+   * Open/close form for edit/add mode
+   *
+   * @param {*} mode || mode in which form is opened
+   */
+  handleOpenAddDialog(mode) {
     this.openAddDialog = !this.openAddDialog;
+    if (mode === 'edit') {
+      this.editMode = true;
+    } else {
+      this.editMode = false;
+    }
   }
 
+  /**
+   * Function to set the project ID
+   *
+   * @param {*} projectID || project ID of project
+   */
+  setProjectId(projectID) {
+    this.projectID = projectID;
+    this.setProjectData(projectID);
+  }
+
+  /**
+   * Function to set the dialog position
+   *
+   * @param {*} position
+   */
+  setDialogPosition(position) {
+    this.dialogPosition = {
+      ...this.dialogPosition,
+      xPosition: position.xPosition,
+      yPosition: position.yPosition,
+    };
+  }
+
+  openAddOnDialog() {
+    this.addOnDialogOpened = !this.addOnDialogOpened;
+  }
+
+  setProjectData(projectID) {
+    this.projectData = this.filteredProject.filter((project) => {
+      if (project.id === projectID) {
+        return project;
+      }
+    });
+  }
   /**
    * Renders the component.
    *
    * @returns {HTMLElement}
    */
   render() {
-    console.log('renderd')
     return html`
       <div class="wrapper">
         <div class="container">
+          <add-on-dialog
+            id="add-on-dialog"
+            .projectID=${this.projectID}
+            .opened=${this.addOnDialogOpened}
+            .dialogPosition=${this.dialogPosition}
+            .handleCloseDialog=${this.openAddOnDialog}
+            .handleEditButton=${this.handleOpenAddDialog}
+            .handleDeleteButton=${() => this.deleteProject(this.projectID)}
+          ></add-on-dialog>
+
           <div class="nav clearfix">
             <div class="nav-container ">
               <h4 class="logo-text float-l">Project</h4>
@@ -174,25 +295,32 @@ class MyApp extends LitElement {
               ></project-filter>
             </div>
           </div>
+
           <div class="card-container">
             ${this.filteredProject.map(
               (project) =>
                 html`
                   <project-card
                     .project=${project}
-                    .deleteProject=${this.deleteProject}
+                    .setProjectID=${this.setProjectId}
+                    .setDialogPosition=${this.setDialogPosition}
+                    .onAddOnIconClick=${this.openAddOnDialog}
+                    .deleteProject=${() => this.deleteProject()}
                   ></project-card>
                 `
             )}
           </div>
         </div>
+
         <div class="add-button">
           <paper-fab noink @click="${this.handleOpenAddDialog}" icon="add">
           </paper-fab>
           <add-project
-            .openDialog=${this.openAddDialog}
-            .handleCloseDialog=${this.handleOpenAddDialog}
             .add=${this.addProject}
+            .editMode=${this.editMode}
+            .openDialog=${this.openAddDialog}
+            .projectData=${this.projectData}
+            .handleCloseDialog=${this.handleOpenAddDialog}
           ></add-project>
         </div>
         <div class="confirm-dialog">

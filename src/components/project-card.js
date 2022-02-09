@@ -1,5 +1,5 @@
-import { LitElement, html, css, nothing } from 'lit-element';
 import { classMap } from 'lit/directives/class-map.js';
+import { LitElement, html, css, nothing } from 'lit-element';
 
 import './add-on-dialog.js';
 
@@ -49,6 +49,7 @@ class ProjectCard extends LitElement {
           float: right;
         }
         .card-wrapper {
+          position: relative;
           padding: 10px;
           width: 100%;
           border: 1px solid grey;
@@ -142,10 +143,43 @@ class ProjectCard extends LitElement {
    */
   static get properties() {
     return {
+      /**
+       * Project data to display in paper card.
+       *
+       * Passed from parent component.
+       *
+       * @type {Array}
+       */
       project: { type: Array },
-      opened: { type: String },
-      position: { type: Object },
-      deleteProject: { type: Function },
+
+      /**
+       * Sets the project projectId when verticle dot icon is clicked
+       *
+       * Passed from parent component
+       *
+       * @type {Function}
+       */
+      setProjectID: { type: Function },
+
+      /**
+       * Sets the add-on dialog position
+       *
+       * Passed from parent component
+       *
+       * @type {Function}
+       */
+      setDialogPosition: { type: Object },
+
+      /**
+       * Function executed when triple dot verticle icon is clicked.
+       *
+       * Sets the dialog position, projectID and close/open add-on dialog.
+       *
+       * Passed from parent component
+       *
+       * @type {Function}
+       */
+      onAddOnIconClick: { type: Function },
     };
   }
 
@@ -155,34 +189,51 @@ class ProjectCard extends LitElement {
    */
   constructor() {
     super();
-    this.opened = false;
     this.position = {};
   }
 
+  /**
+   * Function that map class for respective project priority
+   *
+   * @param {*} priority || project priority
+   * @returns {Object}
+   */
   getPriorityClassMap(priority) {
     return {
       textRed: priority === 'High',
-      textOrange: priority === 'Medium',
       textGreen: priority === 'Low',
+      textOrange: priority === 'Medium',
     };
   }
 
+  /**
+   * Function that map class for respective project stage
+   *
+   * @param {*} status || project status
+   * @returns {Object}
+   */
   getStatusClassMap(status) {
     return {
       textRed: status === 'Attrited',
-      textOrange: status === 'In Progress',
       textGreen: status === 'Completed',
+      textOrange: status === 'In Progress',
     };
   }
 
-  openAddOn(e) {
-    let xPosition = e.clientX;
-    let yPosition = e.clientY;
-    this.position = Object.assign(
-      {},
-      { positionX: xPosition, positionY: yPosition }
-    );
-    this.opened = !this.opened;
+  /**
+   * Function to open project add-on components.
+   *
+   * @param {*} e || event
+   * @param {*} projectID || projectID
+   */
+  openAddOn(e, projectID) {
+    let positionX = e.clientX;
+    let positionY = e.clientY;
+    let position = { xPosition: positionX, yPosition: positionY };
+
+    this.onAddOnIconClick();
+    this.setProjectID(projectID);
+    this.setDialogPosition(position);
   }
   /**
    * Renders the component.
@@ -206,21 +257,10 @@ class ProjectCard extends LitElement {
           </div>
           <div class="card-header-right float-r">
             <paper-icon-button
-              @click=${(e) => this.openAddOn(e)}
+              @click=${(e) => this.openAddOn(e, this.project.id)}
               icon="more-vert"
             >
             </paper-icon-button>
-
-            <div>
-              ${this.opened
-                ? html` <add-on-dialog
-                    .openDialog=${this.opened}
-                    .position=${this.position}
-                    .handleDeleteButton=${() =>
-                      this.deleteProject(this.project.id)}
-                  ></add-on-dialog>`
-                : nothing}
-            </div>
           </div>
         </div>
         <div class="card-description">${this.project.description}</div>
@@ -274,4 +314,8 @@ class ProjectCard extends LitElement {
   }
 }
 
+/**
+ * Defining and registration of component as 'project-card'
+ *
+ */
 customElements.define('project-card', ProjectCard);

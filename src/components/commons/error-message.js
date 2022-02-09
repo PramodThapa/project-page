@@ -31,6 +31,13 @@ class ErrorMessage extends LitElement {
    */
   static get properties() {
     return {
+      /**
+       * Error message
+       *
+       * Passed from parent component.
+       *
+       * @type {String}
+       */
       error: { type: String },
     };
   }
@@ -53,4 +60,8 @@ class ErrorMessage extends LitElement {
   }
 }
 
+/**
+ * Defining and registration of component as 'error-message'
+ *
+ */
 customElements.define('error-message', ErrorMessage);

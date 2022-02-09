@@ -35,6 +35,7 @@
     "@polymer/paper-input": "^3.2.1",
     "@polymer/paper-item": "^3.0.1",
     "@polymer/paper-listbox": "^3.0.1",
+    "@polymer/paper-menu": "^0.0.3",
     "lit": "^2.0.0"
   },
   "devDependencies": {

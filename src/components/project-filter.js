@@ -3,9 +3,6 @@ import { LitElement, html, css } from 'lit-element';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 
-/**
- * Your description here..
- */
 class ProjectFilter extends LitElement {
   /**
    * The styles for the component.
@@ -45,6 +42,13 @@ class ProjectFilter extends LitElement {
    */
   static get properties() {
     return {
+      /**
+       * Function that executes when paper-input value changes.
+       *
+       * Passed from parent component
+       *
+       * @type {Function}
+       */
       handleSearchInput: { type: Function },
     };
   }
@@ -55,7 +59,6 @@ class ProjectFilter extends LitElement {
    */
   constructor() {
     super();
-   
   }
 
   /**
@@ -67,10 +70,17 @@ class ProjectFilter extends LitElement {
     return html`
       <div class="filter">
         <iron-icon icon="search"></iron-icon>
-        <input placeholder="Search Projects"  @input = ${(e)=>this.handleSearchInput(e)} />
+        <input
+          placeholder="Search Projects"
+          @input=${(e) => this.handleSearchInput(e)}
+        />
       </div>
     `;
   }
 }
 
+/**
+ * Defining and registration of component as 'project-filter'
+ *
+ */
 customElements.define('project-filter', ProjectFilter);
