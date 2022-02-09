@@ -54,7 +54,7 @@ export class ConfirmDialog extends LitElement {
 
   render() {
     return html`
-      <paper-dialog with-backdrop >
+      <paper-dialog with-backdrop>
         <div class="wrapper">
           <h2>Are you sure you want to cancel?</h2>
           <paper-button dialog-dismiss raised class="close"

@@ -510,7 +510,6 @@ class AddProject extends LitElement {
    * @returns {HTMLElement}
    */
   render() {
-    console.log(this.projectData);
     return html`
       <paper-dialog class="addProject" modal .opened=${this.openDialog}>
         <div class="wrapper">

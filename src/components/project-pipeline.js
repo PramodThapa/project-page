@@ -2,17 +2,15 @@ import { LitElement, html, css, nothing, render } from 'lit-element';
 
 import './commons/error-message.js';
 
-
 /**
  * Pipeline Name Dropdown Items
-*/
+ */
 const pipelineName = ['ASP Pipeline', 'Antibody Pipeline'];
 
 /**
  * Pipeline Name Dropdown Items
-*/
+ */
 const pipelineStage = ['Lead Validation', 'Lead Identification'];
-
 
 class ProjectPipeline extends LitElement {
   /**
@@ -85,59 +83,58 @@ class ProjectPipeline extends LitElement {
    */
   static get properties() {
     return {
-
       /**
        * Array of pipeline object.
-       * 
+       *
        * Passsed from parent component
-       * 
-       * @type {Array} 
-      */
+       *
+       * @type {Array}
+       */
       pipeline: { type: Array },
 
       /**
        * Array of pipeline error object with their respective validation status.
-       * 
+       *
        * Passsed from parent component
-       * 
-       * @type {Array} 
-      */
+       *
+       * @type {Array}
+       */
       pipelineError: { type: Array },
 
       /**
        * Function that adds pipeline to the pileline array.
-       * 
+       *
        * Passsed from parent component
-       * 
-       * @type {Function} 
-      */
+       *
+       * @type {Function}
+       */
       addPipeline: { type: Function },
 
       /**
        * Function that delete pipeline from the pileline array.
-       * 
+       *
        * Passsed from parent component
-       * 
-       * @type {Function} 
-      */
+       *
+       * @type {Function}
+       */
       deletePipeline: { type: Function },
 
       /**
        * Function that adds pipeline name to the pileline array to respective pipeline id.
-       * 
+       *
        * Passsed from parent component
-       * 
-       * @type {Function} 
-      */
+       *
+       * @type {Function}
+       */
       addPipelineName: { type: Function },
 
       /**
        * Function that adds pipeline stage to the pileline array to respective pipeline id.
-       * 
+       *
        * Passsed from parent component
-       * 
-       * @type {Function} 
-      */
+       *
+       * @type {Function}
+       */
       addPipelineStage: { type: Function },
     };
   }
@@ -249,9 +246,8 @@ class ProjectPipeline extends LitElement {
   }
 }
 
-
 /**
  * Defining and registration of component as 'project-pipeline'
- * 
-*/
+ *
+ */
 customElements.define('project-pipeline', ProjectPipeline);
